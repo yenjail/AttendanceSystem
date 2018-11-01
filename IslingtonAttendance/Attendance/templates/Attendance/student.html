@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<a class="nav-item nav-link" href="{% url 'index' %}">Home</a>
+<a class="nav-item nav-link" href="{% url 'all_routines' %}">Browse Routines</a>
+<a class="nav-item nav-link" href="{% url 'all_students' %}">Browse Students</a>
+<a class="nav-item nav-link" href="{% url 'all_groups' %}">Browse Groups</a>
+{% endblock %}
+
+{% block content %}
+<h1 align="center" style="margin-top:20px;margin-bottom:10px;">Student Profile</h1>
+
+<div class="container">
+	<div class="md-col-10">
+		<h3>Student Details</h3>
+		<p>Student ID: {{ student.student_id }}<p>
+		<p>Name: {{ student.student_first_name }} {{ student.student_last_name }}</p>
+		<p>Group: {{ group.group_id }}</p>
+		<p>Enrolled Modules: 
+		{% for module in enrolled_modules %}
+			{{ module.module.module_code }} {{ module.module.title }} 
+		{% endfor %}
+		</p>
+		
+		<h3>Attendances</h3>
+		{% for routine,attendances in attendances_dict.items %}
+					<p>Module: {{ routine.routine.module.module_code }} {{ routine.routine.module.title }} ({{ routine.routine.class_type }})</p>
+					<p>Class Time: {{ routine.routine.startTime }} - {{ routine.routine.endTime }}</p>
+					<table class="table table-hover" align="center">
+						<tr>
+							<th>Date</th>
+							<th>Attendance Time</th>
+						</tr>
+					{% for attendance in attendances %} 
+						<tr>
+							<td>{{ attendance.0 }}</td>
+							<td>{{ attendance.1 }}</td>
+						</tr>
+					{% endfor %}
+					</table>
+					<hr/>
+		{% endfor %}	
+	</div>
+</div>
+{% endblock %}

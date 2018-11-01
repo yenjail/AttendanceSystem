@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Student List</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="{% static 'css/attendance.css' %}">
+	
+
+</head>
+<body>
+	<h1 align="center">Student List</h1>
+	
+	<div class="container">
+		<div class="md-col-10">
+        	<!--div class="btn-group show-on-hover" style="margin: 20px;">
+          		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select a group<span class="caret"></span></button>
+          		<ul class="dropdown-menu" role="menu">
+          			{% for group in groups %}
+		            	<li><a href="#">{{group.group_id}}</a></li>
+		            {% endfor %}
+          		</ul>
+        	</div-->
+			<!--table class="table table-hover" align="center">
+				<tr>
+					<th>Group</th>
+					<th>Year</th>
+				</tr>
+				{% for group in groups %}
+					<tr>
+						<td><a href="{% url 'group_view' group.group_id %}">{{group.group_id}}</a></td>
+						<td>{{group.year}}</td>
+					</tr>
+				{% endfor %}				
+			</table-->
+			<!---
+			{% for attendance in attendances %}
+				<p>{{ attendance }} {{ attendance.routine.module.module_code }} {{ attendance.routine }}</p>
+			{% endfor %}-->
+			
+			<h2>{{ attendance }}</h2>
+			<h2> {% for group in groups %}
+				{{ group.group.group_id }}
+				{% endfor %}
+			</h2>
+			
+			{% for attendance_detail in attendance_details %}
+				<p>{{ attendance_detail.enrollno.student }}, {{ attendance_detail.entry_datetime.date }}, {{ attendance_detail.entry_datetime.time }}</p>
+			{% endfor %}
+			
+			{% for day in days %}
+				<p>{{ day }}</p>
+			{% endfor %}
+			
+			{% for attendances in attendances_by_day %}
+				{% for attendance in attendances %}
+					{% for a in attendance %}
+						<p>{{ a.enrollno.student }}, {{ a.entry_datetime.date }}, {{ a.entry_datetime.time }}</p>
+					{% endfor %}
+					<hr>
+				{% endfor %}
+			{% endfor %}
+			
+			{% for student in students %}
+				<p>{{ student }}</p>
+			{% endfor %}
+
+			{% for attendance in attendances_list %}
+				<p>{{ attendance }}</p>
+			{% endfor %}
+			
+			{% for student,attendances in attendances_dict.items %}
+				<p> {{ student }} {{ attendances }} </p>
+			{% endfor %}
+			
+			<table class="table table-hover" align="center">
+				<tr>
+					<th>Student Name</th>
+					{% for day in days %}
+						<th>{{ day }}</th>
+					{% endfor %}
+				</tr>
+				{% for student,attendances in attendances_dict.items %}
+					<tr>
+						<td>{{ student }} </td>
+						{% for attendance in attendances %}
+							<td>{{ attendance }}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}				
+			</table>
+		</div>
+	</div>
+	
+</body>

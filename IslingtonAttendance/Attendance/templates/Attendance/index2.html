@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<a class="nav-item nav-link active" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
+<a class="nav-item nav-link" href="{% url 'all_routines' %}">Browse Routines</a>
+<a class="nav-item nav-link" href="{% url 'all_students' %}">Browse Students</a>
+<a class="nav-item nav-link" href="{% url 'all_groups' %}">Browse Groups</a>
+{% endblock %}
+	
+{% block content %}
+<div class="container">
+	<h1 align="center" style="margin-top:20px;margin-bottom:10px;">Welcome to Islington College Student Attendance System</h1>
+	<div class="md-col-10">
+		{% lorem 4 p %}			
+	</div>
+</div>
+{% endblock %}

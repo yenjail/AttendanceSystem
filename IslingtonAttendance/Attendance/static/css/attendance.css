@@ -1,0 +1,18 @@
+.show-on-hover:hover > ul.dropdown-menu {
+    display: block;    
+}
+
+/*********************** Demo - 12 *******************/
+.box12{position:relative}
+.box12 .box-content,.box12:after{position:absolute;transition:all .3s ease 0s}
+.box12:after{content:"";width:65%;background:rgba(28,28,28,.8);padding-bottom:65%;opacity:0;top:50%;left:50%;transform:rotate(0) translate(-50%,-50%);transform-origin:0 0 0}
+.box12:hover:after{transform:rotate(-45deg) translate(-50%,-50%);opacity:1}
+.box12 img{width:100%;height:auto}
+.box12 .box-content{width:100%;top:35%;left:0;opacity:0;z-index:1}
+.box12:hover .box-content{opacity:1}
+.box12 .title{padding:10px 0;color:#fff;margin:0;border-top:2px solid #fff;border-bottom:2px solid #fff}
+.box12 .icon{padding:0;margin:12px 0 0;list-style:none}
+.box12 .icon li a{display:block;width:35px;height:35px;line-height:35px;border-radius:50%;border:1px solid #fff;font-size:18px;color:#fff;margin-right:10px;transition:all .3s ease 0s}
+.box12 .icon li a:hover{border-radius:0}
+@media only screen and (max-width:990px){.box12{margin-bottom:20px}
+}

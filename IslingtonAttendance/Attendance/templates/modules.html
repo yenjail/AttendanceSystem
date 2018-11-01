@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty</title>
+</head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<body>
+     <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Module Code</th>
+        <th>Title</th>
+        <th>Period</th>
+        <th>Level</th>
+        <th>Credit</th>
+      </tr>
+    </thead>
+    <tbody>
+
+        {%for module in modules %}
+
+
+        <tr>
+            <td><a href="{% url 'group_list' module.faculty_id %}">{{module.module_id}}</a></td>
+            <td>{{module.module.title}}</td>
+            <td>{{module.module.period}}</td>
+            <td>{{module.module.level}}</td>
+            <td>{{module.module.credit}}</td>
+      </tr>
+
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+</body>
+</html>

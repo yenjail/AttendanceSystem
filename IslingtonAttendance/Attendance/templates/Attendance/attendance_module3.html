@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<a class="nav-item nav-link" href="{% url 'index' %}">Home</a>
+<a class="nav-item nav-link" href="{% url 'all_routines' %}">Browse Routines</a>
+<a class="nav-item nav-link" href="{% url 'all_students' %}">Browse Students</a>
+<a class="nav-item nav-link" href="{% url 'all_groups' %}">Browse Groups</a>
+{% endblock %}
+
+
+{% block content %}
+	<h1 align="center" style="margin-top:20px;margin-bottom:10px;">Attendance By Routine</h1>
+	
+	<div class="container">
+		<div class="md-col-10">
+			<h4>Class: {{ routine.module.module_code }} {{ routine.module.title }} ({{ routine.class_type }})</h4>
+			<h4>Lecturer: {{ routine.teacher }} </h4>
+			<h4>Day: {{ routine.day_of_the_week }} </h4>
+			<h4>Classroom: {{ routine.location }} </h4>
+			<h4>Start Time: {{ routine.startTime }} </h4>
+			<h4>End Time: {{ routine.endTime }} </h4>
+			<h4>Group(s): 
+				{% for group in groups %}
+					{{ group.group.group_id }}
+				{% endfor %}
+			</h4>
+		
+			<table class="table table-hover" align="center">
+				<tr>
+					<th>Student ID</th>
+					<th>Student Name</th>
+					{% for day in days %}
+						<th>{{ day }}</th>
+					{% endfor %}
+				</tr>
+				{% for student,attendances in attendances_dict.items %}
+					<tr>
+						<td>{{ student.student_id }}</td>
+						<td>{{ student.student_first_name }} {{ student.student_last_name }} {{ attendances.0 }}</td> <!-- attendances.0 contains groupid !-->
+						{% for attendance in attendances|slice:"1:" %} <!-- slice inorder to skip 1st element of list -->
+							<td>{{ attendance }}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}				
+			</table>
+		</div>
+	</div>
+	
+{% endblock %}

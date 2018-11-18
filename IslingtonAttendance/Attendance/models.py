@@ -109,6 +109,7 @@ class Attendance_detail(models.Model):
     entry_datetime=models.DateTimeField(null=True, blank=True)
     #status=models.CharField(max_length=2,blank=True)
     #device_id=models.ForeignKey("Device", null=True, blank=True, on_delete=models.CASCADE)
+    devicekey = models.ForeignKey("Device", null=True, blank=True, to_field="devicekey", on_delete=models.CASCADE, db_column="devicekey")
 
     def __str__(self):
         return str(self.enrollno)+" ,"+str(self.attendance)
@@ -197,5 +198,5 @@ class Device(models.Model):
     location = models.ForeignKey("Classroom", on_delete=models.CASCADE)
     
     def __str__(self):
-        return str(self.deviceid)+", "+str(self.devicename)+", "+str(self.location)
+        return str(self.deviceid)+", "+str(self.devicekey)+", "+str(self.location)
     

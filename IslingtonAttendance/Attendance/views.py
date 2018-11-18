@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Student_group, Group, Attendance, Routine, Student, Faculty
+from .models import Student_group, Group, Attendance, Routine, Student, Faculty, AttendanceLog, Device, Student_Enrollment
 
 def all_students(request):
     #students = Student.objects.all()
@@ -150,6 +150,71 @@ def attendance_by_routine(request,routine_id):
                                                                  'days':days,
                                                                  'attendances_dict':attendances_dict
                                                                  })
+    
+def attendance_by_routine2(request,routine_id):
+    import datetime
+    routine = Routine.objects.get(routine_id=routine_id)
+    groups = routine.group_routine_set.all()
+    location = routine.location #get classroom of routine
+    device = Device.objects.get(location=location) #get device located in the classroom
+    startTime = routine.startTime #starttime or routine
+    endTime = (datetime.datetime.combine(datetime.date(1, 1, 1), routine.endTime) - datetime.timedelta(minutes=30)).time() #end time of routine minus some time delta
+    logs = AttendanceLog.objects.filter(devicekey=device.devicekey).filter(atttime__range=(startTime,endTime)) # get all attendance logs from the particular device entered between startTime and endTime
+    unique_days = logs.distinct("attdate")
+    days = [day.attdate for day in unique_days]
+    attendances_by_day = [[logs.filter(attdate=d)] for d in days]
+    enrolls = logs.distinct("enrollno")
+    students = [Student_Enrollment.objects.get(enrollno=enroll.enrollno).student for enroll in enrolls]
+    attendances_dict = {}
+    for student in students:
+        attendances_dict[student] = [student.student_group_set.all()[0].group_id]
+    i = 1
+    for at in attendances_by_day:
+        for att in at:
+            i+=1
+            for a in att:
+                attendances_dict[Student_Enrollment.objects.get(enrollno=a.enrollno).student].append(a.atttime)
+            for key,value in attendances_dict.items():
+                if len(value) != i:
+                    attendances_dict[key].append("Absent")
+    return render(request, 'Attendance/attendance_module3.html', {'routine':routine,
+                                                    'groups':groups,
+                                                    'days':days,
+                                                    'attendances_dict':attendances_dict})
+    
+def student_view2(request,student_id):
+    student = Student.objects.get(student_id=student_id)
+    group = student.student_group_set.all()[0]
+    enrolled_modules = student.student_module_set.all()
+    routines = group.group.group_routine_set.all()
+    enrollno = student.student_enrollment_set.all()[0].enrollno
+    logs = []
+    import datetime
+    for i in range(len(routines)):
+        location = routines[i].routine.location #get location of the
+        device = Device.objects.get(location=location) #get the associated device
+        startTime = routines[i].routine.startTime #starttime or routine
+        endTime = (datetime.datetime.combine(datetime.date(1, 1, 1), routines[i].routine.endTime) - datetime.timedelta(minutes=30)).time() #end time of routine minus some time delta
+        log = AttendanceLog.objects.filter(devicekey=device.devicekey).filter(atttime__range=(startTime,endTime)).filter(enrollno=enrollno) # get all attendance logs from the particular device entered between startTime and endTime
+        logs.append(log)
+    unique_days = [log.distinct('attdate') for log in logs]
+    days = [[day.attdate for day in u] for u in unique_days]
+    attendances_dict = {}
+    for i in range(len(list(routines))):
+        atts = []
+        for day in days[i]:
+            for atts_detail in logs[i]:
+                if day == atts_detail.attdate:
+                    atts.append((day,atts_detail.atttime))
+                    break
+            else:
+                atts.append((day,"Absent"))
+        attendances_dict[routines[i]] = atts 
+    return render(request, 'Attendance/student.html', {"student":student,
+                                                       'group':group,
+                                                       'enrolled_modules':enrolled_modules,
+                                                       'attendances_dict':attendances_dict
+                                                       })
     
 def student_view_rough(request,student_id):
     student = Student.objects.get(student_id=student_id)
